@@ -1,6 +1,7 @@
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import About from '../components/About';
+import Gallery from '../components/Gallery';
 import Services from '../components/Services';
 import Stats from '../components/Stats';
 import WhyChooseUs from '../components/WhyChooseUs';
@@ -15,6 +16,7 @@ function Home() {
       <Navbar />
       <Hero />
       <About />
+      <Gallery />
       <Services />
       <Stats />
       <WhyChooseUs />

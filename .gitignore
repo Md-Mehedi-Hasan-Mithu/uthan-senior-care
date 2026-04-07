@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Environment variables — NEVER commit these
+.env
+.env.local
+.env.production
+
 # Video files (too large for GitHub)
 *.mp4
 *.MOV

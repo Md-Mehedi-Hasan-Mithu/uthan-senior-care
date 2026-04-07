@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-scroll';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiMenu, HiX } from 'react-icons/hi';
-import { FiUser } from 'react-icons/fi';
+import { FiUser, FiLogOut } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
 import logo from '../images/logo.webp';
 
 const NAV_LINKS = [
@@ -14,6 +15,8 @@ const NAV_LINKS = [
 ];
 
 function Navbar() {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -24,6 +27,11 @@ function Navbar() {
   }, []);
 
   const closeMenu = () => setMenuOpen(false);
+
+  async function handleSignOut() {
+    await signOut();
+    navigate('/');
+  }
 
   return (
     <header
@@ -55,13 +63,23 @@ function Navbar() {
             </li>
           ))}
           <li>
-            <RouterLink
-              to="/signin"
-              className="flex items-center gap-1.5 font-sans text-sm text-white/90 hover:text-gold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded"
-            >
-              <FiUser size={15} />
-              Sign In
-            </RouterLink>
+            {user ? (
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-1.5 font-sans text-sm text-white/90 hover:text-gold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded"
+              >
+                <FiLogOut size={15} />
+                Sign Out
+              </button>
+            ) : (
+              <RouterLink
+                to="/signin"
+                className="flex items-center gap-1.5 font-sans text-sm text-white/90 hover:text-gold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded"
+              >
+                <FiUser size={15} />
+                Sign In
+              </RouterLink>
+            )}
           </li>
           <li>
             <Link

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import FloatingCTA from './components/FloatingCTA';
 import ChatWidget from './components/ChatWidget';
@@ -8,6 +9,7 @@ import SignUp from './pages/SignUp';
 
 function App() {
   return (
+    <AuthProvider>
     <BrowserRouter>
       <ScrollToTop />
       <FloatingCTA />
@@ -18,6 +20,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
       </Routes>
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 
