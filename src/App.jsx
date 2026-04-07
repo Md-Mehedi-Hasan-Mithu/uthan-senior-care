@@ -9,18 +9,18 @@ import SignUp from './pages/SignUp';
 
 function App() {
   return (
-    <AuthProvider>
     <BrowserRouter>
-      <ScrollToTop />
-      <FloatingCTA />
-      <ChatWidget />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
+      <AuthProvider>
+        <ScrollToTop />
+        <FloatingCTA />
+        <ChatWidget />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
-    </AuthProvider>
   );
 }
 

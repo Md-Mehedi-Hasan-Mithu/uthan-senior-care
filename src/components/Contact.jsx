@@ -36,7 +36,12 @@ function Contact() {
     setErrors({});
     setStatus('sending');
     emailjs
-      .sendForm('service_uthan', 'template_contact', formRef.current, 'YOUR_PUBLIC_KEY')
+      .sendForm(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_uthan',
+        import.meta.env.VITE_EMAILJS_TEMPLATE_CONTACT || 'template_contact',
+        formRef.current,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      )
       .then(() => { setStatus('success'); setForm({ name: '', email: '', phone: '', message: '' }); })
       .catch(() => setStatus('error'));
   }
