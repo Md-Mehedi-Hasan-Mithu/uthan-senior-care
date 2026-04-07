@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Video files (too large for GitHub)
+*.mp4
+*.MOV
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
