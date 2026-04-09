@@ -1,24 +1,75 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext(null);
 
+async function fetchAndMergeRole(authUser) {
+  if (!authUser) return null;
+
+  const { data } = await supabase
+    .from('user_roles')
+    .select('role, full_name, status')
+    .eq('email', authUser.email)
+    .single();
+
+  return {
+    id: authUser.id,
+    email: authUser.email,
+    role: data?.role ?? 'member',
+    fullName: data?.full_name ?? authUser.email,
+    status: data?.status ?? 'active',
+  };
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const fetchingRef = useRef(false);
+
+  const loadUserWithRole = async (authUser) => {
+    if (!authUser || fetchingRef.current) return;
+
+    fetchingRef.current = true;
+    try {
+      // Small delay to avoid immediate conflicts with token refresh
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const merged = await fetchAndMergeRole(authUser);
+      setUser(merged);
+    } catch (error) {
+      console.error('Error fetching user role:', error);
+      // Fallback to basic user info
+      setUser({
+        id: authUser.id,
+        email: authUser.email,
+        role: 'member',
+        fullName: authUser.email,
+        status: 'active',
+      });
+    } finally {
+      fetchingRef.current = false;
+    }
+  };
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
+        await loadUserWithRole(session.user);
+      }
       setLoading(false);
     });
+  }, []);
 
-    // Listen for auth changes (sign in, sign out, token refresh)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        if (session?.user) {
+          await loadUserWithRole(session.user);
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      }
+    );
     return () => subscription.unsubscribe();
   }, []);
 
@@ -28,10 +79,21 @@ export function AuthProvider({ children }) {
       password,
       options: {
         data: { full_name: fullName, phone },
-        // Supabase sends a verification email automatically
         emailRedirectTo: `${window.location.origin}/signin`,
       },
     });
+
+    if (!error && data?.user) {
+      // Insert into user_roles on sign up
+      await supabase.from('user_roles').insert({
+        email,
+        user_id: data.user.id,
+        full_name: fullName,
+        role: 'member',
+        status: 'active',
+      });
+    }
+
     return { data, error };
   }
 

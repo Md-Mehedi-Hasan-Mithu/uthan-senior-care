@@ -44,9 +44,9 @@ function Navbar() {
         aria-label="Main navigation"
       >
         {/* Logo */}
-        <Link to="hero" smooth offset={0} duration={500} className="cursor-pointer flex items-center gap-2">
+        <RouterLink to="/" className="flex items-center gap-2">
           <img src={logo} alt="Uthan Senior Care" className="h-10 w-auto object-contain" />
-        </Link>
+        </RouterLink>
 
         {/* Desktop nav */}
         <ul className="hidden md:flex items-center gap-6" role="list">
@@ -62,6 +62,26 @@ function Navbar() {
               </Link>
             </li>
           ))}
+          {user && (
+            <li>
+              <RouterLink
+                to="/checkin"
+                className="font-sans text-sm text-white/90 hover:text-gold transition-colors duration-200"
+              >
+                Check In
+              </RouterLink>
+            </li>
+          )}
+          {user?.role === 'admin' && (
+            <li>
+              <RouterLink
+                to="/admin"
+                className="font-sans text-sm text-white/90 hover:text-gold transition-colors duration-200"
+              >
+                Admin
+              </RouterLink>
+            </li>
+          )}
           <li>
             {user ? (
               <button
@@ -129,14 +149,48 @@ function Navbar() {
                   </Link>
                 </li>
               ))}
+              {user && (
+                <li>
+                  <RouterLink
+                    to="/checkin"
+                    onClick={closeMenu}
+                    className="block font-sans text-base text-white/90 hover:text-gold transition-colors duration-200 py-1"
+                  >
+                    Check In
+                  </RouterLink>
+                </li>
+              )}
+              {user?.role === 'admin' && (
+                <li>
+                  <RouterLink
+                    to="/admin"
+                    onClick={closeMenu}
+                    className="block font-sans text-base text-white/90 hover:text-gold transition-colors duration-200 py-1"
+                  >
+                    Admin
+                  </RouterLink>
+                </li>
+              )}
               <li>
-                <RouterLink
-                  to="/signin"
-                  onClick={closeMenu}
-                  className="block font-sans text-base text-white/90 hover:text-gold transition-colors duration-200 py-1"
-                >
-                  Sign In
-                </RouterLink>
+                {user ? (
+                  <button
+                    onClick={() => {
+                      handleSignOut();
+                      closeMenu();
+                    }}
+                    className="w-full text-left font-sans text-base text-white/90 hover:text-gold transition-colors duration-200 py-1"
+                  >
+                    Sign Out
+                  </button>
+                ) : (
+                  <RouterLink
+                    to="/signin"
+                    onClick={closeMenu}
+                    className="block font-sans text-base text-white/90 hover:text-gold transition-colors duration-200 py-1"
+                  >
+                    Sign In
+                  </RouterLink>
+                )}
               </li>
               <li>
                 <Link

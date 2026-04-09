@@ -7,4 +7,17 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   console.error('Missing Supabase env vars. Check your .env file.');
 }
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    // Reduce token refresh frequency to minimize conflicts
+    storageKey: 'uthan-auth-token',
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'uthan-senior-care-app',
+    },
+  },
+});

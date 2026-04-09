@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import services from '../data/services.js';
+import serviceImage from '../images/services.webp';
 
 const containerVariants = {
   hidden: {},
@@ -23,15 +24,41 @@ function Services() {
   return (
     <section id="services" className="bg-[#FBF8F3] py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Heading */}
-        <div className="text-center mb-14">
-          <h2 className="font-serif text-4xl text-navy font-bold mb-3">Our Services</h2>
-          <p className="text-gray-600 text-lg max-w-xl mx-auto">
-            Comprehensive care programs designed to enrich the lives of seniors every day.
-          </p>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center mb-14">
+          <div className="space-y-6">
+            <span className="inline-block bg-gold/10 text-gold text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full">
+              Our Services
+            </span>
+            <div>
+              <h2 className="font-serif text-4xl text-navy font-bold mb-3">
+                Care, connection, and daily support made simple.
+              </h2>
+              <p className="text-gray-600 text-lg max-w-xl">
+                Comprehensive care programs designed to enrich the lives of seniors every day with structured activities, nutritious meals, transportation support, and compassionate guidance.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {['Daily activities', 'Nutritious meals', 'Reliable transport'].map((item) => (
+                <div key={item} className="rounded-3xl bg-white/90 border border-gray-200 p-4 text-sm text-gray-600 shadow-sm">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden rounded-[2rem] shadow-2xl border border-white">
+            <img
+              src={serviceImage}
+              alt="Seniors receiving care in a welcoming community center"
+              className="w-full h-full min-h-[320px] object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 bg-navy/75 p-5">
+              <p className="text-gold text-xs uppercase tracking-[0.25em] mb-2">Trusted care in action</p>
+              <h3 className="text-white text-xl font-semibold">A welcoming environment for every visit</h3>
+            </div>
+          </div>
         </div>
 
-        {/* Card grid */}
         <motion.div
           ref={ref}
           variants={containerVariants}
